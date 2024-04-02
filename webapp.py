@@ -17,9 +17,27 @@ def render_fact():
     states = get_state_options()
     state = request.args.get('state')
     county = county_most_under_18(state)
+    county2 = county_highest_female(state)
+    county3 = county_Veterans(state)
+    county4 = county_2014_Population(state)
+#     highest =  county_2014_Population(state)
+#     countys = total_countys()
     fact = "In " + state + ", the county with the highest percentage of under 18 year olds is " + county + "."
-    return render_template('home.html', state_options=states, funFact=fact)
+    fact2 = "In " + state + ", the county with the highest percentage of females is " + county2 + "."
+    fact3 = "In " + state + ", the county with the highest number of veterans is " + county3 + "."
+    fact4 = "In " + state + ", the county with the highest population is " + county4 + "."
+    return render_template('home.html', state_options=states, funFact=fact, funFact2=fact2, funFact3=fact3, funFact4=fact4)
     
+    
+# def total_countys():
+# 	with open('demographics.json') as demographics_data:
+# 		counties = json.load(demographics_data)
+# 	countys=0
+# 	for c in counties:
+# 		countys += 1
+# 	return countys
+	
+	
 def get_state_options():
     """Return the html code for the drop down menu.  Each option is a state abbreviation from the demographic data."""
     with open('demographics.json') as demographics_data:
@@ -45,6 +63,48 @@ def county_most_under_18(state):
                 highest = c["Age"]["Percent Under 18 Years"]
                 county = c["County"]
     return county
+    
+def county_highest_female(state):
+    """Return the name of a county in the given state with the highest percent of under 18 year olds."""
+    with open('demographics.json') as demographics_data:
+        counties = json.load(demographics_data)
+    highest=0
+    county2 = ""
+    for c in counties:
+        if c["State"] == state:
+            if c["Miscellaneous"]["Percent Female"] > highest:
+                highest = c["Miscellaneous"]["Percent Female"]
+                county2 = c["County"]
+    return county2
+    
+def county_Veterans(state):
+    """Return the name of a county in the given state with the highest percent of under 18 year olds."""
+    with open('demographics.json') as demographics_data:
+        counties = json.load(demographics_data)
+    highest=0
+    county3 = ""
+    for c in counties:
+        if c["State"] == state:
+            if c["Miscellaneous"]["Veterans"] > highest:
+                highest = c["Miscellaneous"]["Veterans"]
+                county3 = c["County"]
+    return county3
+    
+def county_2014_Population(state):
+    """Return the name of a county in the given state with the highest percent of under 18 year olds."""
+    with open('demographics.json') as demographics_data:
+        counties = json.load(demographics_data)
+    highest=0
+    county4 = ""
+    for c in counties:
+        if c["State"] == state:
+            if c["Population"]["2014 Population"] > highest:
+                highest = c["Population"]["2014 Population"]
+                county4 = c["County"]
+    return county4
+    return highest
+    
+    
 
 def is_localhost():
     """ Determines if app is running on localhost or not
